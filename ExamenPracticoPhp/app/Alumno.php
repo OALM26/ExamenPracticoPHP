@@ -3,52 +3,86 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
 use DateTime;
+use GuzzleHttp\Client;
+use Config;
+
 
 class Alumno extends Model
 {
-    protected $table = "Alumno";
 
-    protected $guarded = [];
-
-    protected $primaryKey = 'Matricula';
-
-    public $timestamps = false;
-
-    public function CargaAlumnos()
+    public function Alumnos()
     {
-        $Alumnos = Alumno::join('genero', 'alumno.SexoID', '=', 'genero.Id')
-        ->join('gradoescolar', 'alumno.GradoEscolarID', '=', 'gradoescolar.Id')
-        ->join('estatusalumno', 'alumno.EstatusID', '=', 'estatusalumno.Id')
-        ->select('alumno.Matricula as Matricula', 
-                 'alumno.Nombre as Nombre',
-                 'alumno.fechaNacimiento as FNacimiento',
-                 'genero.Descripcion as Genero',
-                 'gradoescolar.Descripcion as GradoEscolar',
-                 'estatusalumno.Descripcion as Estatus_Alumno')
-        ->orderBy('alumno.Matricula')
-        ->get();
-        
-        return $Alumnos;  
+        $client = new Client();
+        $res = $client->request('GET', env('HOST_API').'/api/GetAlumnos');
+
+        if($res->getStatusCode()!=200)
+        {
+            return "Error";
+        }
+        else
+        {
+            return json_decode($res->getBody());
+        }
     }
 
     public function Alumno($Matricula)
     {
-        $Alumno = Alumno::join('genero', 'alumno.SexoID', '=', 'genero.Id')
-        ->join('gradoescolar', 'alumno.GradoEscolarID', '=', 'gradoescolar.Id')
-        ->join('estatusalumno', 'alumno.EstatusID', '=', 'estatusalumno.Id')
-        ->select('alumno.Matricula as Matricula', 
-                 'alumno.Nombre as Nombre',
-                 'alumno.fechaNacimiento as FNacimiento',
-                 'genero.Descripcion as Genero',
-                 'gradoescolar.Descripcion as GradoEscolar',
-                 'estatusalumno.Descripcion as Estatus_Alumno')
-        ->where('Matricula','=',$Matricula)
-        ->first();
+        $client = new Client();
+        $res = $client->request('GET', env('HOST_API').'/api/GetAlumno/'.$Matricula);
 
-        return $Alumno;
+        if($res->getStatusCode()!=200)
+        {
+            return "Error";
+        }
+        else
+        {
+            return json_decode($res->getBody());
+        }
     }
+
+    public function AlumnoNuevo($request)
+    {
+        $Body=[];
+        $Body['EstatusID']=$request->get('Estatu_Alumno');
+        $Body['FechaNacimiento']=$request->get('FNacimiento');
+        $Body['GradoEscolar']=$request->get('Grado_Escolar');
+        $Body['Nombre']=$request->get('Nombre');
+        $Body['Sexo']=$request->get('Genero_Alumno');
+
+        $Body=json_encode($Body);
+
+        $client = new Client();
+
+        $res = $client->post(env('HOST_API').'/api/PostAlumno', ['body' => $Body]);
+
+        if($res->getStatusCode()!=200)
+        {
+            return "Error";
+        }
+        else
+        {
+            return json_decode($res->getBody());
+        }
+    }
+
+
+    // public function Alumno($Matricula)
+    // {
+    //     $Alumno = Alumno::join('genero', 'alumno.SexoID', '=', 'genero.Id')
+    //     ->join('gradoescolar', 'alumno.GradoEscolarID', '=', 'gradoescolar.Id')
+    //     ->join('estatusalumno', 'alumno.EstatusID', '=', 'estatusalumno.Id')
+    //     ->select('alumno.Matricula as Matricula', 
+    //              'alumno.Nombre as Nombre',
+    //              'alumno.fechaNacimiento as FNacimiento',
+    //              'genero.Descripcion as Genero',
+    //              'gradoescolar.Descripcion as GradoEscolar',
+    //              'estatusalumno.Descripcion as Estatus_Alumno')
+    //     ->where('Matricula','=',$Matricula)
+    //     ->first();
+
+    //     return $Alumno;
+    // }
 
     public function ActualizaAlumno($Matricula,$request)
     {

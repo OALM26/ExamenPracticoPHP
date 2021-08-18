@@ -3,15 +3,24 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use DateTime;
+use GuzzleHttp\Client;
+use Config;
 
 class EstatusAlumno extends Model
 {
-    protected $table = "estatusalumno";
-
-    protected $guarded = [];
-
     public function CargaEstatusAlumno()
     {
-        $EstatusAlumno = EstatusAlumno::all();
-        return $EstatusAlumno;
-    }}
+        $client = new Client();
+        $res = $client->request('GET', env('HOST_API').'/api/GetEstatus');
+
+        if($res->getStatusCode()!=200)
+        {
+            return "Error";
+        }
+        else
+        {
+            return json_decode($res->getBody());
+        }
+    }
+}

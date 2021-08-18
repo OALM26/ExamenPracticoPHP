@@ -14,9 +14,15 @@ class AlumnoController extends Controller
     public function Index()
     {
         $Alumnos = new Alumno();
-        $Alumnos = $Alumnos->CargaAlumnos();
-
-        return view('Alumnos',compact('Alumnos'));
+        $Alumnos = $Alumnos->Alumnos();
+        if($Alumnos!="Error")
+        {
+            return view('Alumnos',compact('Alumnos'));
+        }
+        else
+        {
+            return redirect()->route('Alumnos')->with('alert_alumno','A ocurrido un error, intentelo nuevamente!!');
+        }
     }
 
     public function Create()
@@ -46,16 +52,27 @@ class AlumnoController extends Controller
         
         $Alumno = new Alumno();
         $Alumno = $Alumno->AlumnoNuevo($request);
-       
-        return redirect()->route('Alumnos')->with('alert_alumno','Alumno registrado correctamente');
-        
+
+        if($Alumno!="Error")
+        {
+            return redirect()->route('Alumnos')->with('alert_alumno','Alumno registrado correctamente');
+        }
+        else
+        {
+            return redirect()->route('Alumnos')->with('alert_alumno','A ocurrido un error, intentelo nuevamente!!');
+        }        
     }
 
     public function Edit($Matricula)
     {
         $Alumno = new Alumno();
         $Alumno = $Alumno->Alumno($Matricula);
-
+        
+        foreach($Alumno as $a)
+        {
+            $Alumno=$a;
+        }
+        
         $GradosEscolar = new GradoEscolarAlumno();
         $GradosEscolar = $GradosEscolar->CargaGradoEscolar();
 
