@@ -13,6 +13,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', 'AlumnoController@Index')->name('Alumnos');
+Route::get('/Alumno-Create', 'AlumnoController@Create')->name('Alumno-Create');
+Route::post('/Alumno-Save','AlumnoController@Save')->name('Alumno-Save');
+Route::get('/Alumno-Edit/{id}','AlumnoController@Edit')->name('Alumno-Edit');
+Route::post('/Alumno-Update/{id}','AlumnoController@Update')->name('Alumno-Update');
+Route::get('/Alumno-Delete/{id}','AlumnoController@Delete')->name('Alumno-Delete');
