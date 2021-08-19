@@ -10,12 +10,12 @@ use Illuminate\Support\Facades\Log;
 
 class ApiAlumnoController extends Controller
 {
-    public function GetAlumnos()
+    public function GetAlumnos(Request $request)
     {
         try
         {
             $Alumnos = new Alumno;
-            $Alumnos = $Alumnos->CargaAlumnos();
+            $Alumnos = $Alumnos->CargaAlumnos($request->Grupo);
     
             return $Alumnos;
         }
@@ -32,7 +32,7 @@ class ApiAlumnoController extends Controller
         try
         {
             $Alumnos = new Alumno;
-            $Alumnos = $Alumnos->CargaAlumno($request->Maticula);
+            $Alumnos = $Alumnos->CargaAlumno($request->Matricula);
 
             return $Alumnos;
         }
@@ -119,6 +119,41 @@ class ApiAlumnoController extends Controller
             $Alumno = $Alumno->UpdAlumno($Body['EstatusID'],$Body['FechaNacimiento'],$Body['GradoEscolar'],$Body['Matricula'],$Body['Nombre'],$Body['Sexo']);
     
             return $Alumno;
+        }
+        catch(Exception $e)
+        {
+            Log::error('Hubo un error al entrar' . $e); 
+            return response()->json(['error' => 'A ocurrido un error intentelo nuevamente'], 400);    
+        }
+    }
+
+    public function DelAlumno(Request $request)
+    {
+        try
+        {
+            $Body = json_decode($request->getContent(),true);
+            $Alumno = new Alumno;
+    
+            $Alumno = $Alumno->DelAlumno($request->Matricula);
+    
+            return $Alumno;
+        }
+        catch(Exception $e)
+        {
+            Log::error('Hubo un error al entrar' . $e); 
+            return response()->json(['error' => 'A ocurrido un error intentelo nuevamente'], 400);    
+        }
+    }
+
+    public function GetAlumnosGrupo(Request $request)
+    {
+        try
+        {
+            $Alumnos = new Alumno;
+    
+            $Alumnos = $Alumnos->CargaAlumnosGrupo($request->Grupo);
+    
+            return $Alumnos;
         }
         catch(Exception $e)
         {

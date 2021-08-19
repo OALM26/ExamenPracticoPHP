@@ -21,11 +21,11 @@ class Alumno extends Model
 
     public $timestamps = false;
 
-    public function CargaAlumnos()
+    public function CargaAlumnos($Grupo)
     {
         try
         {
-            $Alumnos = DB::select('CALL proc_CargaAlumnos();');
+            $Alumnos = DB::select('CALL proc_CargaAlumnos(?);',[$Grupo]);
             $resultado = json_encode($Alumnos);
             return $resultado;
         }
@@ -132,6 +132,34 @@ class Alumno extends Model
             DB::commit();
 
             return "Resultado Exitoso";
+        }
+        catch(Exception $e)
+        {
+            Log::error('Hubo un error al entrar' . $e); 
+            return response()->json(['error' => 'A ocurrido un error intentelo nuevamente'], 400);    
+        }
+    }
+
+    public function DelAlumno($Matricula)
+    {
+        try
+        {
+            $Alumno = DB::select('CALL proc_Eliminar_Alumno(?)', [$Matricula]);
+            return $Alumno;
+        }
+        catch(Exception $e)
+        {
+            Log::error('Hubo un error al entrar' . $e); 
+            return response()->json(['error' => 'A ocurrido un error intentelo nuevamente'], 400);    
+        }
+    }
+
+    public function CargaAlumnosGrupo($Grupo)
+    {
+        try
+        {
+            $Alumnos = DB::select('CALL proc_Alumnos_Grado_Activos(?)', [$Grupo]);
+            return $Alumnos;
         }
         catch(Exception $e)
         {

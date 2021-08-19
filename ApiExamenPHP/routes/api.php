@@ -14,8 +14,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('GetAlumnos','ApiAlumnoController@GetAlumnos');
-Route::get('GetAlumno/{Maticula}','ApiAlumnoController@GetAlumno');
+Route::get('GetAlumnos/{Grupo}','ApiAlumnoController@GetAlumnos');
+Route::get('GetAlumno/{Matricula}','ApiAlumnoController@GetAlumno');
+Route::get('GetAlumnosGrupo/{Grupo}','ApiAlumnoController@GetAlumnosGrupo');
 
 Route::get('GetEstatus','ApiAlumnoController@GetEstatus');
 Route::get('GetGenero','ApiAlumnoController@GetGenero');
@@ -23,3 +24,4 @@ Route::get('GetGradoEscolar','ApiAlumnoController@GetGradoEscolar');
 
 Route::post('PostAlumno','ApiAlumnoController@PostAlumno');
 Route::put('PutAlumno','ApiAlumnoController@PutAlumno');
+Route::delete('DelAlumno/{Matricula}','ApiAlumnoController@DelAlumno');

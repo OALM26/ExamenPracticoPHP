@@ -13,7 +13,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', 'AlumnoController@Index')->name('Alumnos');
+Route::get('/', 'AlumnoController@Index')->name('/');
+Route::post('/Alumnos', 'AlumnoController@Alumnos')->name('Alumnos');
+Route::get('/AlumnosList', 'AlumnoController@AlumnosList')->name('AlumnosList');
+
+
 Route::get('/Alumno-Create', 'AlumnoController@Create')->name('Alumno-Create');
 Route::post('/Alumno-Save','AlumnoController@Save')->name('Alumno-Save');
 Route::get('/Alumno-Edit/{id}','AlumnoController@Edit')->name('Alumno-Edit');

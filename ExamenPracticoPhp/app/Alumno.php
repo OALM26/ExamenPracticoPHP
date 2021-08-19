@@ -6,118 +6,172 @@ use Illuminate\Database\Eloquent\Model;
 use DateTime;
 use GuzzleHttp\Client;
 use Config;
+use Illuminate\Support\Facades\Session;
 
+use Exception;
+use Illuminate\Support\Facades\Log;
 
 class Alumno extends Model
 {
 
-    public function Alumnos()
+    public function Alumnos($Grupo)
     {
-        $client = new Client();
-        $res = $client->request('GET', env('HOST_API').'/api/GetAlumnos');
-
-        if($res->getStatusCode()!=200)
+        try
         {
-            return "Error";
+            $client = new Client();
+            $res = $client->request('GET', env('HOST_API').'/api/GetAlumnos/'.$Grupo);
+    
+            if($res->getStatusCode()!=200)
+            {
+                return "Error";
+            }
+            else
+            {
+                return json_decode($res->getBody());
+            }
         }
-        else
+        catch(Exception $e)
         {
-            return json_decode($res->getBody());
+            Log::error('Hubo un error al entrar' . $e); 
+            return;    
+        }
+    }
+
+    public function AlumnosActivos($Grupo)
+    {
+        try
+        {   
+            $client = new Client();
+            $res = $client->request('GET', env('HOST_API').'/api/GetAlumnosGrupo/'.$Grupo);
+    
+            if($res->getStatusCode()!=200)
+            {
+                return "Error";
+            }
+            else
+            {
+                return json_decode($res->getBody());
+            }
+        }
+        catch(Exception $e)
+        {
+            Log::error('Hubo un error al entrar' . $e); 
+            return;    
         }
     }
 
     public function Alumno($Matricula)
     {
-        $client = new Client();
-        $res = $client->request('GET', env('HOST_API').'/api/GetAlumno/'.$Matricula);
 
-        if($res->getStatusCode()!=200)
+        try
         {
-            return "Error";
+            $client = new Client();
+            $res = $client->request('GET', env('HOST_API').'/api/GetAlumno/'.$Matricula);
+    
+            if($res->getStatusCode()!=200)
+            {
+                return "Error";
+            }
+            else
+            {
+                return json_decode($res->getBody());
+            }
         }
-        else
+        catch(Exception $e)
         {
-            return json_decode($res->getBody());
+            Log::error('Hubo un error al entrar' . $e); 
+            return;    
         }
     }
 
     public function AlumnoNuevo($request)
     {
-        $Body=[];
-        $Body['EstatusID']=$request->get('Estatu_Alumno');
-        $Body['FechaNacimiento']=$request->get('FNacimiento');
-        $Body['GradoEscolar']=$request->get('Grado_Escolar');
-        $Body['Nombre']=$request->get('Nombre');
-        $Body['Sexo']=$request->get('Genero_Alumno');
-
-        $Body=json_encode($Body);
-
-        $client = new Client();
-
-        $res = $client->post(env('HOST_API').'/api/PostAlumno', ['body' => $Body]);
-
-        if($res->getStatusCode()!=200)
+        try
         {
-            return "Error";
+            $Body=[];
+            $Body['EstatusID']=$request->get('Estatu_Alumno');
+            $Body['FechaNacimiento']=$request->get('FNacimiento');
+            $Body['GradoEscolar']=Session::get('Grupo');
+            $Body['Nombre']=$request->get('Nombre');
+            $Body['Sexo']=$request->get('Genero_Alumno');
+    
+            $Body=json_encode($Body);
+    
+            $client = new Client();
+    
+            $res = $client->post(env('HOST_API').'/api/PostAlumno', ['body' => $Body]);
+    
+            if($res->getStatusCode()!=200)
+            {
+                return "Error";
+            }
+            else
+            {
+                return json_decode($res->getBody());
+            }
+
         }
-        else
+        catch(Exception $e)
         {
-            return json_decode($res->getBody());
+            Log::error('Hubo un error al entrar' . $e); 
+            return;    
         }
     }
 
-
-    // public function Alumno($Matricula)
-    // {
-    //     $Alumno = Alumno::join('genero', 'alumno.SexoID', '=', 'genero.Id')
-    //     ->join('gradoescolar', 'alumno.GradoEscolarID', '=', 'gradoescolar.Id')
-    //     ->join('estatusalumno', 'alumno.EstatusID', '=', 'estatusalumno.Id')
-    //     ->select('alumno.Matricula as Matricula', 
-    //              'alumno.Nombre as Nombre',
-    //              'alumno.fechaNacimiento as FNacimiento',
-    //              'genero.Descripcion as Genero',
-    //              'gradoescolar.Descripcion as GradoEscolar',
-    //              'estatusalumno.Descripcion as Estatus_Alumno')
-    //     ->where('Matricula','=',$Matricula)
-    //     ->first();
-
-    //     return $Alumno;
-    // }
-
     public function ActualizaAlumno($Matricula,$request)
     {
-        DB::beginTransaction();
-        
-        $Alumno = Alumno::where('Matricula','=',$Matricula)->first();
-
-        $Datos  =   [];
-
-        $Datos['Nombre'] = $request->get('Nombre');
-
-        if($request->get('FNacimiento')!=$Alumno->FechaNacimiento)
+        try
         {
-           $Datos['FechaNacimiento'] =$request->get('FNacimiento');
+            $Body=[];
+            $Body['EstatusID']=$request->get('Estatu_Alumno');
+            $Body['FechaNacimiento']=$request->get('FNacimiento');
+            $Body['GradoEscolar']=Session::get('Grupo');
+            $Body['Matricula']=$Matricula;
+            $Body['Nombre']=$request->get('Nombre');
+            $Body['Sexo']=$request->get('Genero_Alumno');
+    
+            $Body=json_encode($Body);
+    
+            $client = new Client();
+    
+            $res = $client->put(env('HOST_API').'/api/PutAlumno', ['body' => $Body]);
+    
+            if($res->getStatusCode()!=200)
+            {
+                return "Error";
+            }
+            else
+            {
+                return json_decode($res->getBody());
+            }
         }
-        if($request->get('Genero_Alumno')!='Default')
+        catch(Exception $e)
         {
-            $Datos['SexoID'] =$request->get('Genero_Alumno');
+            Log::error('Hubo un error al entrar' . $e); 
+            return;    
         }
-        if($request->get('Grado_Escolar')!='Default')
+    }
+
+    public function DelAlumno($Matricula)
+    {
+        try
+        {             
+            $client = new Client();
+            $res = $client->request('DELETE', env('HOST_API').'/api/DelAlumno/'.$Matricula);
+    
+            if($res->getStatusCode()!=200)
+            {
+                return "Error";
+            }
+            else
+            {
+                return "Correcto";
+            }
+        }
+        catch(Exception $e)
         {
-            $Datos['GradoEscolarID'] =$request->get('Grado_Escolar');
+            Log::error('Hubo un error al entrar' . $e); 
+            return;    
         }
-        if($request->get('Estatu_Alumno')!='Default')
-        {
-            $Datos['EstatusID'] = $request->get('Estatu_Alumno');
-        }
-
-
-        $Datos['Fecha_Modificación'] = new DateTime(date("d-m-Y"));
-
-        $Alumno->update($Datos);
-
-        DB::commit();
-        
-        return;
     }
 }
