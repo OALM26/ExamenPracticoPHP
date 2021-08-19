@@ -7,6 +7,7 @@
   cual contiene el proyecto del sitio web.
   
 3-Ejecutaremos un CMD apuntando dentro de la carpeta de ApiExamenPHP y ejecutaremos los siguientes comandos:
+	
 	composer install
 
 	php artisan clear-compiled
