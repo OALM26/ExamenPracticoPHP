@@ -1,0 +1,46 @@
+# ExamenPracticoPHP
+
+1-Se debera de crear la base de datos, con el BackUp que esta en el GIT llamada db_pruebaalumnos.
+
+2-En el GIT existen dos carpetas una llamada ApiExamenPHP, la cual es donde estan las API REST,
+  en donde se ejecutaran las STORED PROCEDURE. La segunda carpeta se llamada ExamenPracticoPhp, la
+  cual contiene el proyecto del sitio web.
+  
+3-Ejecutaremos un CMD apuntando dentro de la carpeta de ApiExamenPHP y ejecutaremos los siguientes comandos:
+	composer install
+
+	php artisan clear-compiled
+
+	php artisan route:clear
+	php artisan view:clear
+
+	php artisan cache:clear
+	php artisan config:cache
+	php artisan config:clear
+
+	
+4- Ejecutaremos un ultimo comando en la carpeta de ApiExamenPHP, en donde asignaremos el puerto en que deseamos 
+   tener los serivicios de las API REST,en mi caso sera el puerto 8001, entonces mi comando a ejecutar quedaria 
+   de la siguiente manera:
+   
+   php artisan serve --port=8001
+
+5- En el archivo .env de la carpeta ExamenPracticoPhp se encuentra una variable llamada HOST_API, la cual es el dominio y puerto de donde
+   se estan ejecutando las RES API en mi caso es http://localhost:8001/, ahi puedes poner la URL de dominio por el cual estan siendo ejecutadas
+   las REST API.
+
+6- Ejecutaremos por ultimo ingresaremos los siguientes comandos en un CMD, apuntando dentro de la carpeta de ExamenPracticoPhp:
+  
+	composer install
+
+	php artisan clear-compiled
+
+	php artisan route:clear
+	php artisan view:clear
+
+	php artisan cache:clear
+	php artisan config:cache
+	php artisan config:clear
+	php artisan serve
+	
+	

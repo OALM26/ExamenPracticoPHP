@@ -14,7 +14,7 @@
     <br>
     <br>
     <div class="col-12 text-center">
-      <h2>Bienvenido al administrador de Alumnos</h2>
+      <a href="{{url('/')}}"><h2>Bienvenido al administrador de Alumnos</h2></a>
     </div>
     <br>
     <br>
