@@ -118,6 +118,40 @@ class Alumno extends Model
         }
     }
 
+    public function AlumnoNuevoGrupo($request)
+    {
+        try
+        {
+            $Body=[];
+            $Body['EstatusID']=$request->get('Estatu_Alumno');
+            $Body['FechaNacimiento']=$request->get('FNacimiento');
+            $Body['GradoEscolar']=$request->get('Grado_Escolar');
+            $Body['Nombre']=$request->get('Nombre');
+            $Body['Sexo']=$request->get('Genero_Alumno');
+    
+            $Body=json_encode($Body);
+    
+            $client = new Client();
+    
+            $res = $client->post(env('HOST_API').'/api/PostAlumno', ['body' => $Body]);
+    
+            if($res->getStatusCode()!=200)
+            {
+                return "Error";
+            }
+            else
+            {
+                return json_decode($res->getBody());
+            }
+
+        }
+        catch(Exception $e)
+        {
+            Log::error('Hubo un error al entrar' . $e); 
+            return;    
+        }
+    }
+
     public function ActualizaAlumno($Matricula,$request)
     {
         try
@@ -125,10 +159,11 @@ class Alumno extends Model
             $Body=[];
             $Body['EstatusID']=$request->get('Estatu_Alumno');
             $Body['FechaNacimiento']=$request->get('FNacimiento');
-            $Body['GradoEscolar']=Session::get('Grupo');
+            $Body['GradoEscolar']=$request->get('Grado_Escolar');
             $Body['Matricula']=$Matricula;
             $Body['Nombre']=$request->get('Nombre');
             $Body['Sexo']=$request->get('Genero_Alumno');
+
     
             $Body=json_encode($Body);
     

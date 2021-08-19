@@ -114,6 +114,7 @@ class ApiAlumnoController extends Controller
         try
         {
             $Body = json_decode($request->getContent(),true);
+
             $Alumno = new Alumno;
     
             $Alumno = $Alumno->UpdAlumno($Body['EstatusID'],$Body['FechaNacimiento'],$Body['GradoEscolar'],$Body['Matricula'],$Body['Nombre'],$Body['Sexo']);

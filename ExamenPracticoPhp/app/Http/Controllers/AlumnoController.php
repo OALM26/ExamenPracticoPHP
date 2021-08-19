@@ -250,4 +250,57 @@ class AlumnoController extends Controller
             return redirect()->route('/')->with('alert_alumno','A ocurrido un Error, favor de intentarlo Nuevamente!!');
         }      
     }
+
+    public function CreateAlum(Request $request)
+    {
+        try
+        {
+            $Estatus_Alumno = new EstatusAlumno();
+            $Estatus_Alumno = $Estatus_Alumno->CargaEstatusAlumno();
+    
+            $Generos_Alumno = new GeneroAlumno();
+            $Generos_Alumno = $Generos_Alumno->GenerosAlumno();
+    
+            $GradosEscolar = new GradoEscolarAlumno();
+            $GradosEscolar = $GradosEscolar->CargaGradoEscolar();
+
+            return view('AlumnoGroupCreate',compact('GradosEscolar','Estatus_Alumno','Generos_Alumno'));
+        }
+        catch(Exception $e)
+        {
+            Log::error('Hubo un error al entrar' . $e); 
+            return redirect()->route('/')->with('alert_alumno','A ocurrido un Error, favor de intentarlo Nuevamente!!');
+        }
+    }
+
+    public function SaveAlum(Request $request)
+    {
+        $this->validate($request,
+        [
+            'Nombre' => 'required|string|min:15|max:200|nullable',
+            'Genero_Alumno' => 'required|not_in:Default',
+            'Estatu_Alumno' => 'required|not_in:Default',
+            'FNacimiento' => 'nullable|date|before:today'
+        ]);
+        
+        try
+        {
+            $Alumno = new Alumno();
+            $Alumno = $Alumno->AlumnoNuevoGrupo($request);
+    
+            if($Alumno!="Error")
+            {
+                return redirect()->route('/')->with('alert_alumno','Alumno registrado correctamente');
+            }
+            else
+            {
+                return redirect()->route('/')->with('alert_alumno','A ocurrido un Error, favor de intentarlo Nuevamente!!');
+            }        
+        }
+        catch(Exception $e)
+        {
+            Log::error('Hubo un error al entrar' . $e); 
+            return redirect()->route('/')->with('alert_alumno','A ocurrido un Error, favor de intentarlo Nuevamente!!');
+        }
+    }
 }

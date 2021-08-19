@@ -1,8 +1,26 @@
 @extends('Layout')
 @section('content')
+<div class="container">
+<div class="row">
+   <div class="col-sm-5 col-md-10 col-lg-12">
+      <a href="{{url('/AlumnoCreate')}}" class="btn btn-danger">
+      <i class="fa fa-plus"></i>
+      Añadir Alumnos
+      </a>
+   </div>
+</div>
+</div>
+<br>
+<br>
+<br>
+ 
 <form action="{{ url('/Alumnos')}}" method="POST" enctype="multipart/form-data">
    {{ csrf_field()}}
-   <div class="container">
+   <div class="container border">
+      <br>
+      <h3>Busqueda de alumnos</h3>
+      <br>
+      <br>
       <div class="row">
          <div class="col-xs-12 col-sm-12 col-md-9 col-lg-12">
             <div class="row">

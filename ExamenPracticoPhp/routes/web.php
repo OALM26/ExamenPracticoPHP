@@ -20,6 +20,10 @@ Route::get('/AlumnosList', 'AlumnoController@AlumnosList')->name('AlumnosList');
 
 Route::get('/Alumno-Create', 'AlumnoController@Create')->name('Alumno-Create');
 Route::post('/Alumno-Save','AlumnoController@Save')->name('Alumno-Save');
+
+Route::get('/AlumnoCreate', 'AlumnoController@CreateAlum')->name('AlumnoCreate');
+Route::post('/AlumnoSave','AlumnoController@SaveAlum')->name('AlumnoSave');
+
 Route::get('/Alumno-Edit/{id}','AlumnoController@Edit')->name('Alumno-Edit');
 Route::post('/Alumno-Update/{id}','AlumnoController@Update')->name('Alumno-Update');
 Route::get('/Alumno-Delete/{id}','AlumnoController@Delete')->name('Alumno-Delete');
